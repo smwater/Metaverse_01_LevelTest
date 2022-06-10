@@ -2,6 +2,7 @@
 // reference는 & 없이 그대로 사용해도 된다.
 // 두 값을 교체해주어야하니 중간에 값을 저장해줄 변수를 하나 선언한다.
 #include <iostream>
+
 using namespace std;
 
 // A

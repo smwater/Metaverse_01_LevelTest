@@ -4,6 +4,7 @@
 // 그러면 자연스럽게 가장 큰 수가 오른쪽으로 밀린다.
 // 그 다음엔 맨 끝자리를 제외하고 반복한다.
 #include <iostream>
+
 using namespace std;
 
 /// <summary>

@@ -6,7 +6,9 @@
 // 그런데 중복되지 않는 숫자로
 // -> 숫자를 인덱스로 받는 bool 배열을 만들어 값이 false일때만 출력한다
 #include <iostream>
+
 #define size 10000	// bool 배열의 크기
+
 using namespace std;
 
 int main()

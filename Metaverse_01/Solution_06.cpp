@@ -5,11 +5,12 @@
 // -> 조커, 기호, 영어를 열거형으로 만들어 switch case로 구분한다.
 // 두명의 플레이어에게 7장씩 배분
 // -> 반복문 사용, bool 배열을 이용해 중복된 카드를 지급하지 않게 한다.
-
 #include <iostream>
 #include <string>
+
 #define playerHandInCard 7
 #define cardDeckNum 53
+
 using namespace std;
 
 enum Card
@@ -44,74 +45,48 @@ void handOutCard(bool* cardDeck, int* playerArr)
 /// <returns>출력할 카드 이름</returns>
 string printCard(int cardNum)
 {
-	if (cardNum == Joker)	// 조커는 0번이므로 처음부터 제외
+	if (cardNum == Joker)	// 조커는 0이므로 처음부터 제외
 	{
 		return "Joker";
 	}
-	else if (cardNum > Spade && cardNum <= Clover)	// 우선 기호로 구분하고
+	
+	string cardName;	// 카드 이름을 저장할 변수 생성
+
+	switch (cardNum / 13)	// 각 카드마다 기호를 빼주고
 	{
-		switch (cardNum - Spade)	// 각 카드마다 기호를 빼주고
-		{
-		case A:						// 영어는 따로 case로 return한 후에
-			return "♠A";
-		case J:
-			return "♠J";
-		case Q:
-			return "♠Q";
-		case K:
-			return "♠K";
-		default:
-			return "♠" + to_string(cardNum - Spade);	// 나머지 숫자는 to_string으로 변환 후 결합한다.
-		}
+	case 0:
+		cardName = "♠";
+		break;
+	case 1:
+		cardName = "♣";
+		break;
+	case 2:
+		cardName = "♥";
+		break;
+	case 3:
+		cardName = "◆";
+		break;
 	}
-	else if (cardNum > Clover && cardNum <= Heart)
+
+	switch (cardNum % 13 + 1)	
 	{
-		switch (cardNum - Clover)
-		{
-		case A:
-			return "♣A";
-		case J:
-			return "♣J";
-		case Q:
-			return "♣Q";
-		case K:
-			return "♣K";
-		default:
-			return "♣" + to_string(cardNum - Clover);
-		}
+	case A:						// 영어는 따로 case로 return한 후에
+		cardName += "A";
+		break;
+	case J:
+		cardName += "J";
+		break;
+	case Q:
+		cardName += "Q";
+		break;
+	case K:
+		cardName += "K";
+		break;
+	default:
+		cardName += to_string(cardNum % 13 + 1);	// 나머지 숫자는 to_string으로 변환 후 결합한다.
 	}
-	else if (cardNum > Heart && cardNum <= Diamond)
-	{
-		switch (cardNum - Heart)
-		{
-		case A:
-			return "♥A";
-		case J:
-			return "♥J";
-		case Q:
-			return "♥Q";
-		case K:
-			return "♥K";
-		default:
-			return "♥" + to_string(cardNum - Heart);
-		}
-	}
-	else if (cardNum > Diamond)
-	{
-		switch (cardNum - Diamond)
-		{
-		case A:
-			return "◆A";
-		case J:
-			return "◆J";
-		case Q:
-			return "◆Q";
-		case K:
-			return "◆K";
-		default:
-			return "◆" + to_string(cardNum - Diamond);
-		}
-	}
+	
+	return cardName;
 }
 
 /// <summary>

@@ -1,6 +1,7 @@
 // 1000 미만의 3의 승수를 출력해야한다.
 // 반복문을 돌리면서 3의 승수라면 출력하기로 한다.
 #include <iostream>
+
 using namespace std;
 
 int main()
