@@ -7,8 +7,6 @@
 // -> 숫자를 인덱스로 받는 bool 배열을 만들어 값이 false일때만 출력한다
 #include <iostream>
 
-#define size 10000	// bool 배열의 크기
-
 using namespace std;
 
 int main()
@@ -22,18 +20,29 @@ int main()
 	cout << "생성할 갯수 : ";
 	cin >> count;
 
-	bool existNum[size] = { false };	// 중복값이 없도록 이미 나온 숫자를 저장하는 배열
-	for (int i = 0; i < count; i++)	// count만큼 반복
+	int* lotto = new int[count];
+	bool* existNum = new bool[maxNum + 1];	// 중복인지 검사하는 배열
+	*existNum = { false };
+
+	for (int i = 0; i < count; i++)			// count만큼 반복
 	{
-		int num = rand() % maxNum + 1;	// 1~최대값 사이의 값 생성
-		while (existNum[num])			// 중복이면
+		int num = rand() % maxNum + 1;		// 1~최대값 사이의 값 생성
+		while (existNum[num] == true)		// 중복이면
 		{
-			num = rand() % maxNum + 1;	// 다시 생성
+			num = rand() % maxNum + 1;		// 다시 생성
 		}
 
-		cout << num << endl;			// 출력
-		existNum[num] = true;			// 중복이 아니면 배열에 저장
+		lotto[i] = num;						// 중복이 아니면 배열에 저장
+		existNum[num] = true;				// 중복인지 체크하는 배열도 갱신
 	}
+
+	for (int i = 0; i < count; i++)
+	{
+		cout << lotto[i] << endl;			// 출력
+	}
+
+	delete[] lotto;
+	delete[] existNum;
 	
 	return 0;
 }

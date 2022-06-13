@@ -15,29 +15,57 @@ using namespace std;
 /// <summary>
 /// 크기를 입력 받아서 달팽이 배열을 만들고 출력한다
 /// </summary>
+/// <param name="array">배열의 주소</param>
 /// <param name="size">배열의 크기</param>
-void snailArray(int size)
+/// <param name="num">시작 값</param>
+/// <param name="num">값을 넣을 첫 위치</param>
+void snailArray(int** array, int size, int num, int start)
 {
-	int array[100][100] = {};
-
-	int num = 0;
-	// 무슨 규칙을 만들어야할까... 시간이 부족해서 생각하지 못했다
-	for (int row = 0; row < size; row++)
+	if (size == 1)
 	{
-		for (int column = 0; column < size; column++)
+		if (array[start][start] == 0)
 		{
-			array[row][column] = num + 1;
-			num++;
+			array[start][start] = num;
 		}
+		return;
 	}
 	
+	for (int i = start; i < size; i++)
+	{
+		array[start][i] = num;
+		num++;
+	}
+
+	for (int i = start + 1; i < size; i++)
+	{
+		array[i][size - 1] = num;
+		num++;
+	}
+	
+	for (int i = size - 2; i >= start; i--)
+	{
+		array[size - 1][i] = num;
+		num++;
+	}
+
+	for (int i = size - 2; i >= start + 1; i--)
+	{
+		array[i][start] = num;
+		num++;
+	}
+
+	snailArray(array, size - 1, num, start + 1);
+}
+
+void printArray(int** array, int size)
+{
 	// 저장한 배열 출력
 	for (int row = 0; row < size; row++)
 	{
 		for (int column = 0; column < size; column++)
 		{
 			cout << left;
-			cout << setw(4) << array[row][column];
+			cout << setw(5) << array[row][column];
 		}
 		cout << endl;
 	}
@@ -50,5 +78,23 @@ int main()
 	int N;
 	cin >> N;
 
-	snailArray(N);
+	if (N != 1)
+	{
+		int** array = new int* [N];
+		for (int i = 0; i < N; i++)
+		{
+			array[i] = new int[N];
+		}
+
+		snailArray(array, N, 1, 0);
+		printArray(array, N);
+
+		for (int i = 0; i < N; i++)
+		{
+			delete[] array[i];
+		}
+	}
+	else { cout << 1 << endl; }
+
+	return 0;
 }

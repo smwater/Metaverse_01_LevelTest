@@ -59,7 +59,6 @@ int main()
 	srand(time(NULL));
 
 	int bingoBoard[5][5] = {};
-	bool existNum[25] = {};
 
 	makeBingoBoard(bingoBoard);
 
@@ -70,10 +69,14 @@ int main()
 
 		printf("현재 %d줄의 빙고가 완성되었습니다.\n\n", bingoCount);
 		printf("숫자를 입력해 주세요 : ");
-		
-		int num;
+
+		int num = 0;
 		scanf("%d", &num);
-		checkBingoBoard(bingoBoard, num);
+		
+		if (num >= 1 && num <= 25)
+		{
+			checkBingoBoard(bingoBoard, num);
+		}
 
 		bingoCount = checkBingoCount(bingoBoard);
 
@@ -108,7 +111,14 @@ void printBingoBoard(int (*board)[columnSize])
 	{
 		for (int column = 0; column < columnSize; column++)
 		{
-			printf("%-4d", board[row][column]);	// 숫자를 4칸에 왼쪽 정렬로 출력
+			if (board[row][column] == 0)
+			{
+				printf("♡  ");
+			}
+			else
+			{
+				printf("%-4d", board[row][column]);	// 숫자를 4칸에 왼쪽 정렬로 출력
+			}
 		}
 		printf("\n\n");
 	}
