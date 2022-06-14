@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define squareSize 5
+#define squareSize 10
 #define rowSize squareSize
 #define columnSize squareSize
 
@@ -58,7 +58,7 @@ int main()
 {
 	srand(time(NULL));
 
-	int bingoBoard[5][5] = {};
+	int bingoBoard[rowSize][columnSize] = {};
 
 	makeBingoBoard(bingoBoard);
 
@@ -73,7 +73,7 @@ int main()
 		int num = 0;
 		scanf("%d", &num);
 		
-		if (num >= 1 && num <= 25)
+		if (num >= 1 && num <= rowSize * columnSize)
 		{
 			checkBingoBoard(bingoBoard, num);
 		}
@@ -86,16 +86,16 @@ int main()
 
 void makeBingoBoard(int (*board)[columnSize])
 {
-	bool existNum[25] = {};	// 중복을 제외하기 위해 이미 나온 숫자를 저장할 배열
+	bool existNum[rowSize * columnSize] = {};	// 중복을 제외하기 위해 이미 나온 숫자를 저장할 배열
 
 	for (int row = 0; row < rowSize; row++)
 	{
 		for (int column = 0; column < columnSize; column++)
 		{
-			int num = rand() % 25 + 1;	// 랜덤한 값 생성
+			int num = rand() % (rowSize * columnSize) + 1;	// 랜덤한 값 생성
 			while (existNum[num - 1])	// 배열에 존재하는 값이라면
 			{
-				num = rand() % 25 + 1;	// 랜덤한 값 재생성
+				num = rand() % (rowSize * columnSize) + 1;	// 랜덤한 값 재생성
 			}
 
 			board[row][column] = num;	// 존재하지 않는다면 저장
@@ -143,26 +143,24 @@ int checkBingoCount(int (*board)[columnSize])
 {
 	int bingoCount = 0;
 
-	int rowBingo[5] = {};		// 가로줄의 합을 저장하는 배열
-	int columnBingo[5] = {};	// 세로줄의 합을 저장하는 배열
+	int rowBingo[rowSize] = {};		// 가로줄의 합을 저장하는 배열
+	int columnBingo[columnSize] = {};	// 세로줄의 합을 저장하는 배열
 	int diagonalBingo[2] = {};	// 대각선의 합을 저장하는 배열
 
 	// 각 줄의 합을 구한다
-	for (int rowCount = 0; rowCount < rowSize; rowCount++)
-	{
-		columnBingo[0] += board[rowCount][0];
-		columnBingo[1] += board[rowCount][1];
-		columnBingo[2] += board[rowCount][2];
-		columnBingo[3] += board[rowCount][3];
-		columnBingo[4] += board[rowCount][4];
-	}
 	for (int columnCount = 0; columnCount < columnSize; columnCount++)
 	{
-		rowBingo[0] += board[0][columnCount];
-		rowBingo[1] += board[1][columnCount];
-		rowBingo[2] += board[2][columnCount];
-		rowBingo[3] += board[3][columnCount];
-		rowBingo[4] += board[4][columnCount];
+		for (int rowCount = 0; rowCount < rowSize; rowCount++)
+		{
+			columnBingo[columnCount] += board[rowCount][columnCount];
+		}
+	}
+	for (int rowCount = 0; rowCount < rowSize; rowCount++)
+	{
+		for (int columnCount = 0; columnCount < columnSize; columnCount++)
+		{
+			rowBingo[rowCount] += board[rowCount][columnCount];
+		}
 	}
 	for (int count = 0; count < squareSize; count++)
 	{
