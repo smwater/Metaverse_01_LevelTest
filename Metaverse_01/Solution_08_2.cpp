@@ -41,8 +41,8 @@ int main()
 			direction = (Direction)((direction + 1) % DIR_MAX);
 
 			// 2-6. 위치값을 다시 계산한다.
-			int nr = r + dr[(int)direction];
-			int nc = c + dc[(int)direction];
+			nr = r + dr[(int)direction];
+			nc = c + dc[(int)direction];
 		}
 		
 		// 2-7. 이동한다.
@@ -58,5 +58,6 @@ int main()
 		}
 		cout << "\n";
 	}
+
 	delete[] arr;
 }

@@ -13,7 +13,6 @@
 using namespace std;
 
 // 카드 덱에서 어떤 카드가 뽑혔는지 저장하는 배열
-bool isUsedCard[cardDeckNum] = { false };
 
 // Deck 타입
 // 1. 모든 덱은 카드가 중복되지 않아야 한다.
@@ -28,11 +27,8 @@ bool isUsedCard[cardDeckNum] = { false };
 //		 카드가 없는 경우 "The deck is empty"로 반환한다.
 class Deck
 {
-	enum Card
-	{
-		A, J = 10, Q = 11, K = 12, Spade = 0, Clover = 13, Heart = 26, Diamond = 39, Joker = 52
-	};
-
+	static bool isUsedCard[cardDeckNum];
+	static int existedCard;
 public:
 	Deck() = default;
 	Deck(const Deck& other) = delete;
@@ -44,9 +40,7 @@ public:
 
 	void Clear()
 	{
-		_existedCardNum = 53;
-		_playerNum = 0;
-		memset(deck, 0, 7);
+		memset(_deck, 0, 7);
 	}
 
 	/// <summary>
@@ -56,12 +50,12 @@ public:
 	/// <returns>덱이 성공적으로 구성됐을 경우 true, 아니면 false</returns>
 	bool Make()
 	{
-		if (_existedCardNum < 7)
+		if (existedCard < 7)
 		{
 			return false;
 		}
 
-		for (int count = 0; count < 7; count++)	// 7장 배분
+		for (int i = 0; i < 7; i++)	// 7장 배분
 		{
 			int card = rand() % cardDeckNum;	// 일단 카드를 생성하고
 			while (isUsedCard[card])			// 이미 뽑은 카드면
@@ -70,90 +64,79 @@ public:
 			}
 
 			isUsedCard[card] = true;			// 카드가 남았다면 뽑았다고 체크하고
-			deck[count] = card;					// 배열에 저장한다
+			_deck[i] = card;					// 배열에 저장한다
 		}
 
-		_existedCardNum -= 7;
+		existedCard -= 7;
 
 		return true;
 	}
 
-	string ToString(int Num)
+	// ToString()
+	//		: 현재 덱의 카드를 표현하는 문자열을 만든다.
+	//		  카드가 없는 경우 "The deck is empty" 로 반환한다.
+	//		  예시 : ◆9 ♣A ♥J ♣K ♠A ♥8 ♠Q
+	string ToString()
 	{
-		string cardName;	// 카드 이름을 저장할 변수 생성
+		string result = "";
 
+		// 덱이 완성되지 않았을 경우,
+		// 아래의 절차를 실행하지 않고 반환한다.
+		if (_deck[0] == -1)
+		{
+			return "The deck is empty";
+		}
+
+		// Lookup Table
 		static const string cardShape[] = { "♠", "♣", "♥", "◆" };
 		static const string cardNum[] = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
-
-		if (Num / 13 == 4)
+		
+		// 덱의 모든 원소를 문자열로 변환 
+		for (int i = 0; i < 7; i++)
 		{
-			return "Joker";
+			if (_deck[i] / 13 == 4)	// 카드의 모양이 무엇인지부터 생각한다.
+			{
+				result += "Joker ";	
+				continue;			// 조커라면 아래의 절차는 시행하지 않고 다음 원소 확인
+			}
+
+			result += cardShape[_deck[i] / 13];	// 몫은 카드의 모양
+			result += cardNum[_deck[i] % 13];	// 나머지는 카드의 숫자(혹은 영어)
+
+			result += " ";	// 가독성을 위해 space 추가
 		}
 
-		cardName = cardShape[Num / 13];
-		cardName += cardNum[Num % 13];
-
-		return cardName;
-	}
-
-	void Print()
-	{
-		if (deck[6] == 0)
-		{
-			cout << "The deck is empty" << endl;
-			return;
-		}
-
-		cout << "Player : ";
-		// 출력을 예쁘게 하기 위해 마지막 카드를 제외하고 출력
-		for (int count = 0; count < 6; count++)
-		{
-			cout << ToString(deck[count]) << ", ";
-		}
-		cout << ToString(deck[6]) << endl;
+		return result;		// 합쳐서 반환
 	}
 
 private:
-	int _existedCardNum = 53;
-	int _playerNum = 0;
-	int deck[7] = {};
+	int _deck[7] = { -1 };
 };
+
+bool Deck::isUsedCard[cardDeckNum] = { false };
+int Deck::existedCard = cardDeckNum;
 
 int main()
 {
 	srand(time(NULL));	// 매번 다른 값을 출력하기 위해 seed값 추가
 
-	Deck player1;
-	player1.Make();
-	player1.Print();
+	const int playerNum = 10;
 
-	Deck player2;
-	player2.Make();
-	player2.Print();
+	Deck deck[playerNum];
+	for (int i = 0; i < playerNum; i++)
+	{
+		if (false == deck[i].Make())
+		{
+			cout << i + 1 << "번째 플레이어는 덱 구성 실패\n";
+		}
+	}
 
-	Deck player3;
-	player3.Make();
-	player3.Print();
+	cout << endl;
 
-	Deck player4;
-	player4.Make();
-	player4.Print();
-
-	Deck player5;
-	player5.Make();
-	player5.Print();
-
-	Deck player6;
-	player6.Make();
-	player6.Print();
-
-	Deck player7;
-	player7.Make();
-	player7.Print();
-
-	Deck player8;
-	player8.Make();
-	player8.Print();
+	for (int i = 0; i < playerNum; i++)
+	{
+		cout << "Player " << i + 1 << " : " << deck[i].ToString() << endl;
+	}
 
 	return 0;
 }
